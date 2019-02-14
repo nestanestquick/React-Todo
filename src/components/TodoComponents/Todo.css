@@ -35,6 +35,7 @@
     border-bottom: 1px solid black;
 }
 
-button {
-    margin-left: 22.5px;
+form {
+    display: flex;
+    justify-content: space-between;
 }
