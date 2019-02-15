@@ -1,13 +1,74 @@
 import React from 'react';
+import TodoList from './components/TodoComponents/TodoList';
+import TodoForm from './components/TodoComponents/TodoForm';
+
+const todoList = [
+  {taskName: 'pls work', id: Date.now(), complete: false},
+]
 
 class App extends React.Component {
-  // you will need a place to store your state in this component.
-  // design `App` to be the parent component of your application.
-  // this component is going to take care of state, and any change handlers you need to work with your state
+  constructor(props){
+    super(props);
+    this.state = {
+      todoList: todoList,
+      taskName: '',
+    }
+  }
+
+  handleChanges = e => {
+    this.setState({ [e.target.name]: e.target.value});
+  };
+
+  addNew = e => {
+    e.preventDefault();
+    this.setState({
+      todoList: [
+        ...this.state.todoList,
+        { taskName: this.state.taskName, id: Date.now(), complete: false}
+      ],
+      taskName: ''
+    });
+  };
+
+  setComplete = index => {
+    console.log('clicked on list item!');
+    this.setState({
+      todoList: this.state.todoList.map((task, id) => {
+        if (index !== id){
+          return task;
+        }
+        else {
+          return {
+            ...task,
+            complete: !task.complete
+          }
+        }
+      })
+    });
+  };
+
+  clear = e => {
+    e.preventDefault();
+    this.setState({
+      todoList: this.state.todoList.filter(
+        task => task.complete !== true
+      )
+    })
+  }
+
   render() {
+    console.log('rendered the page');
     return (
-      <div>
-        <h2>Welcome to your Todo App!</h2>
+      <div className='App'>
+        <div className='title'><h1>To-Do List</h1></div>
+        <TodoList setComplete = {this.setComplete}
+          todoList={this.state.todoList} />
+        <TodoForm
+        addNew = {this.addNew}
+        clear = {this.clear}
+        handleChanges = {this.handleChanges}
+        taskName = {this.state.taskName}
+        id = {Date.now()}/>
       </div>
     );
   }
